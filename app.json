@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "alligator-new",
-    "slug": "alligator-new",
-    "version": "1.0.0",
+    "name": "Alligator",
+    "slug": "alligator",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -17,7 +17,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.alligatorgames.alligator"
     },
     "android": {
       "adaptiveIcon": {

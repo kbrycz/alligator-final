@@ -1,0 +1,26 @@
+***************TODO******************
+- Add header image to the app store stuff
+
+**************LATER*****************
+
+
+
+- Change the notification timer back to what its supposed to be
+
+
+**************BUGS***************
+
+
+
+**************TEST***************
+
+
+
+**************v2***************
+- full screen ads after the final guess
+    - Make sure to update it to actual ads
+Add share button links and rate
+
+
+- Need to figure out notifications with handleSuccess for in the foreground
+- When all done, need to add task manager for background notification with info.plist
