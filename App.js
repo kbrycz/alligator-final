@@ -15,10 +15,9 @@ import { Asset } from 'expo-asset';
 import HowToScreen from './src/screens/Opening/HowToScreen';
 import PlayerScreen from './src/screens/Game/PlayerScreen';
 import SettingsAccountInfoScreen from './src/screens/Home/SettingsAccountInfoScreen';
-import SettingsPasswordScreen from './src/screens/Home/SettingsPasswordScreen';
 import SettingsAboutScreen from './src/screens/Home/SettingsAboutScreen';
 import * as SplashScreen from 'expo-splash-screen';
-
+import AppLoading from 'expo-app-loading';
 
 
 // Creates stack for the Authentication screens
@@ -48,7 +47,6 @@ const SettingsStack = () => {
         }}>
         <Settings.Screen name="SettingsHome" component={SettingsScreen} />
         <Settings.Screen name="AccountInfo" component={SettingsAccountInfoScreen} />
-        <Settings.Screen name="Password" component={SettingsPasswordScreen} />
         <Settings.Screen name="About" component={SettingsAboutScreen} />
     </Settings.Navigator>
   )
@@ -96,17 +94,22 @@ class App extends React.Component {
     super();
     this.state = {
       loading: true,
-      hasToken: false,
+      hasName: false,
       hasGameData: false
     };
   }
 
   // Loads all assets before screen renders
   // Allows for images and fonts to be in place when the screen is rendered
-  async loadEverything() {
+   loadEverything = async () => {
 
     // Keep the splash screen visible while we fetch resources
     await SplashScreen.preventAutoHideAsync();
+
+    // Loads all the fonts
+    await Font.loadAsync({
+      PatrickHand: require('./assets/fonts/PatrickHand-Regular.ttf')
+    })
 
     // Loads all the images
     await Asset.loadAsync([
@@ -121,32 +124,28 @@ class App extends React.Component {
       require('./assets/opening/screen1.png'),
       require('./assets/opening/screen2.png'),
       require('./assets/opening/screen3.png'),
-    ]);
+    ])
+    
+    // Checks if the users has a login token and sets the hasToken bool
+    let name = await AsyncStorage.getItem('name')
+    this.setState({ hasName: name !== null})
 
     // Checks if the users has a login token and sets the hasToken bool
-    AsyncStorage.getItem('token').then((token) => {
-      this.setState({ hasToken: token !== null})
-    })
-
-    // Checks if the users has a login token and sets the hasToken bool
-    AsyncStorage.getItem('gameData').then((gameData) => {
-      this.setState({ hasGameData: gameData !== null})
-    })
-
-    // Loads all the fonts
-    await Font.loadAsync({
-      PatrickHand: require('./assets/fonts/PatrickHand-Regular.ttf')
-    });
-
-    // Sets loading to false, indicating all of the loading is done and we can show the screens
-    this.setState({ 
-        loading: false,
-    });
+    let gameData = await AsyncStorage.getItem('gameData')
+    this.setState({ hasGameData: gameData !== null})
 
     setTimeout(async () => {
       await SplashScreen.hideAsync();
     }, 2000);
-}
+  }
+
+
+  // Allows for fading between screens
+  forFade = ({ current }) => ({
+    cardStyle: {
+      opacity: current.progress,
+    },
+  });
  
   // Check and see if user already has a token to log user in
   componentDidMount() {
@@ -156,18 +155,27 @@ class App extends React.Component {
   // Renders the jsx for the UI
   render() {
     if (this.state.loading) {
-      return <View style={styles.background}>
-             </View>
+      return (
+        <AppLoading
+          startAsync={this.loadEverything}
+          onFinish={() => this.setState({ loading: false })}
+          onError={console.warn}
+          autoHideSplash={false}
+        />
+      );
     } 
    else  {
       return( 
           <NavigationContainer>
              <RootStack.Navigator screenOptions={{
                 headerShown: false,
-                animationEnabled: false
+                headerMode: 'none',
+                animationEnabled: true,
+                cardStyleInterpolator: this.forFade,
+                gestureEnabled: false,
               }}>
               { 
-                !this.state.hasToken 
+                !this.state.hasName 
                 ? <>
                   <RootStack.Screen name='Open' component={OpeningStack} />
                   <RootStack.Screen name='Home' component={HomeStack} />

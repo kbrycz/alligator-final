@@ -6,7 +6,7 @@ const WaitingComponent = ({waitText}) => {
     return (
         <View>
             <Text style={styles.headerText}>{waitText}</Text>
-            <Text style={styles.sub}>* Make sure to click the notification to participate in the round!</Text>
+            <Text style={styles.sub}>* Make sure to click the notification to participate in the round! (Keep app open in background!)</Text>
         </View>
     )
 }

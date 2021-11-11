@@ -14,6 +14,7 @@
     "axios": "^0.24.0",
     "expo": "~43.0.0",
     "expo-ads-admob": "^11.0.3",
+    "expo-app-loading": "^1.2.1",
     "expo-font": "^10.0.3",
     "expo-notifications": "^0.13.3",
     "expo-splash-screen": "^0.13.5",
@@ -22,6 +23,8 @@
     "react-dom": "17.0.1",
     "react-native": "0.64.2",
     "react-native-confirmation-code-field": "^7.1.0",
+    "react-native-gesture-handler": "^1.10.3",
+    "react-native-safe-area-context": "^3.3.2",
     "react-native-uuid": "^2.0.1",
     "react-native-web": "0.17.1",
     "socket.io-client": "^4.3.2"

@@ -2,7 +2,6 @@ import React from 'react'
 import {View, StyleSheet, Text, TouchableOpacity, Dimensions} from 'react-native'
 import * as Color from '../../../global/colors'
 
-
 const PlayerListComponent = ({player, index}) => {
 
     // Gets the correct container color for even / odd
@@ -21,8 +20,8 @@ const PlayerListComponent = ({player, index}) => {
 
     return (
         <View style={[styles.container, containerStyle()]}>
-            <Text style={styles.name}>{player.first} {player.last}</Text>
-            <Text style={styles.username}>({player.username})</Text>
+            <Text style={styles.name}>{player.name}</Text>
+
         </View>
     )
 }
@@ -35,17 +34,13 @@ const styles = StyleSheet.create({
     name: {
         color: '#fff',
         textTransform: 'capitalize',
-        fontSize: Dimensions.get('window').height * .03,
+        fontSize: Dimensions.get('window').height * .035,
         fontFamily: 'PatrickHand',
         flex: 2,
         marginLeft: Dimensions.get('window').width * .03,
+        textAlign: 'center'
     },
-    username: {
-        color: '#fff',
-        fontSize: Dimensions.get('window').height * .02,
-        fontFamily: 'PatrickHand',
-        flex: 1,
-    }
+
 
 })
 

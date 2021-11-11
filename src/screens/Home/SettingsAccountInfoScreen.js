@@ -14,9 +14,7 @@ class SettingsAccountInfoScreen extends React.Component {
     constructor() {
         super()
         this.state = {
-            first: '',
-            last: '',
-            username: '',
+            name: '',
             errorMessage: '',
             successMessage: '',
             loading: ''
@@ -27,32 +25,13 @@ class SettingsAccountInfoScreen extends React.Component {
     // Sets the users main info
     componentDidMount() {
         this.setState({
-            first: global.first,
-            last: global.last,
-            username: global.username
+            name: global.name,
         })
     }
 
     // Set the first name of the user
-    setFirst = (f) => {
-        this.setState({first: f, errorMessage: '', successMessage: ''})
-    }
-    
-    // Set the last name of the user
-    setLast = (l) => {
-        this.setState({last: l, errorMessage: '', successMessage: ''})
-    }
-
-    // Set the username name of the user
-    setUsername = (u) => {
-        this.setState({username: u, errorMessage: '', successMessage: ''})
-    }
-
-    // Makes sure that given string only has letters and numbers
-    // Used for usernames
-    onlyLettersAndNumbers(str) {
-        const reg = new RegExp("^[A-Za-z0-9]+$")
-        return reg.test(str)
+    setName = (n) => {
+        this.setState({name: n, errorMessage: '', successMessage: ''})
     }
 
     // Makes sure that the given string only has letters
@@ -64,77 +43,27 @@ class SettingsAccountInfoScreen extends React.Component {
 
     // Change the account info of the user
     changeAccountInfo = async () => {
-
-        this.setState({loading: true})
-
-        // Create variables so easier to read
-        const username = this.state.username
-        const first = this.state.first.replace(/\s+/g, '')
-        const last = this.state.last.replace(/\s+/g, '')
-        const id = global.id
-        const oldUsername = global.username
-
+        console.log(this.state.name)
         // Make sure names are only letters
-        if (!this.onlyLetters(first) || !this.onlyLetters(last)) {
+        if (!this.onlyLetters(this.state.name)) {
             this.setState({
                 errorMessage: 'Name must consist of only letters',
                 loading: false
             })
             return
         }
-
-        // Make sure username is only letters and numbers
-        if (!this.onlyLettersAndNumbers(username)) {
+        else if (this.state.name.length < 2) {
             this.setState({
-                errorMessage: 'Username must be only letters and numbers',
+                errorMessage: 'Name must be longer',
                 loading: false
             })
             return
         }
 
-        try {
-            // Begin trying to send the users data to the server to see 
-            // if they can create an account
-            const response = await api.post('/changeAccountInfo', {
-              username, first, last, id, oldUsername
-            })
-
-            if ('error' in response.data) {
-                this.setState({
-                    errorMessage: response.data.error,
-                    loading: false
-                })
-                return
-            }
-      
-            // Set the token in Async storage so user will log in automatically
-            await AsyncStorage.removeItem('token')
-            await AsyncStorage.removeItem('first')
-            await AsyncStorage.removeItem('last')
-            await AsyncStorage.removeItem('username')
-            await AsyncStorage.setItem('token', response.data.token)
-
-            // Set player data in async storage as well
-            await AsyncStorage.setItem('first', first)
-            await AsyncStorage.setItem('last', last)
-            await AsyncStorage.setItem('username', username)
-
-            // Update global variables
-            global.username = username
-            global.first = first
-            global.last = last
-      
-            // Show user a success message
-            console.log("Successfully updated account")
-            this.setState({successMessage: 'Sucessfully updated account', errorMessage: '', loading: false})
-          } 
-          catch (err) {
-            this.setState({
-              errorMessage: 'Something went wrong with updating your account',
-              successMessage: '',
-              loading: false
-            })
-          }
+        await AsyncStorage.removeItem('name')
+        await AsyncStorage.setItem('name', this.state.name) 
+        global.name = this.state.name
+        this.setState({successMessage: "Successfully changed your name", errorMessage: ''})
     }
 
     render() {
@@ -147,46 +76,20 @@ class SettingsAccountInfoScreen extends React.Component {
                 <Circle1Component />
                 <HideKeyboard>
                     <KeyboardAvoidingView behavior='position'>
-                        <Text style={styles.headerText}>Account Information</Text>
+                        <Text style={styles.headerText}>Change your Name</Text>
                             <View>
                                 <View style={styles.container}>
                                     <TextInput
-                                        onSubmitEditing={() => { this.lastNameField.focus(); }}
                                         autoCompleteType="name"
                                         keyboardType="default"
                                         textContentType='givenName'
                                         autoCorrect={true}
-                                        style={[styles.textInput, styles.left]}
+                                        style={styles.textInput}
                                         returnKeyType="done"
-                                        value={this.state.first}
-                                        placeholder='First'
-                                        onChangeText={this.setFirst} />
-                                    <TextInput
-                                        ref={(input) => { this.lastNameField = input; }}
-                                        onSubmitEditing={() => { this.usernameField.focus(); }}
-                                        autoCompleteType="name"
-                                        keyboardType="default"
-                                        textContentType='familyName'
-                                        autoCorrect={true}
-                                        style={[styles.textInput, styles.right]}
-                                        returnKeyType="done"
-                                        value={this.state.last}
-                                        placeholder='Last'
-                                        onChangeText={this.setLast} />
+                                        value={this.state.name}
+                                        placeholder='Your new name'
+                                        onChangeText={this.setName} />
                                 </View>
-                                <TextInput
-                                    ref={(input) => { this.usernameField = input; }}
-                                    onSubmitEditing={() => { Keyboard.dismiss() }}
-                                    blurOnSubmit={false}
-                                    textContentType="username"
-                                    autoCompleteType='off'
-                                    autoCorrect={false}
-                                    style={styles.textInput}
-                                    keyboardType="default"
-                                    returnKeyType="done"
-                                    value={this.state.username}
-                                    placeholder='Username'
-                                    onChangeText={this.setUsername} />
                                 {
                                     this.state.errorMessage === ''
                                     ? null
@@ -238,7 +141,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: Dimensions.get('window').height * .06,
         fontFamily: 'PatrickHand',
-        color: Color.MAIN_GREEN
+        color: Color.MAIN_GREEN,
+        textTransform: 'capitalize'
     },
 
     textInput: {

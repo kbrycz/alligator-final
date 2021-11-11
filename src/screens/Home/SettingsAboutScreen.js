@@ -1,9 +1,9 @@
 import React from 'react'
-import {View, StyleSheet, Text, TouchableOpacity, Dimensions} from 'react-native'
+import {ScrollView, StyleSheet, Text, TouchableOpacity, Dimensions, View} from 'react-native'
 import * as Color from '../../../global/colors'
 import Circle1Component from '../../components/auth/circles/Circle1Component'
 import global from '../../../global'
-import { Feather } from '@expo/vector-icons'; 
+import { Feather } from '@expo/vector-icons';
 
 class SettingsAboutScreen extends React.Component {
 
@@ -20,13 +20,15 @@ class SettingsAboutScreen extends React.Component {
                     <Feather name="arrow-left" style={styles.back} />
                 </TouchableOpacity>
                 <Circle1Component />
-                <Text style={styles.headerText}>About</Text>
-                <Text style={styles.version}>{global.version}</Text>
-                <Text style={styles.p}>Alligator Games LLC is a Chicago based company specializing in party games. Our mission
-                                        is to bring joy to our users through group party games. </Text>
-                <Text style={styles.p}>"Alligator - The Memory Party Game" is our second game released to the app store! Although it was not the first game released,
-                                        we decided to name the company after it because it was the first game in development and marks the start of our journey!</Text>
-                <Text style={styles.p}>Come learn more about us at https://alligator.games! More games are on the way! Keep an eye out for our releases!</Text>
+                <ScrollView style={{marginBottom: Dimensions.get('window').height * .1, marginTop: Dimensions.get('window').height * .05}}>
+                    <Text style={styles.headerText}>About</Text>
+                    <Text style={styles.version}>{global.version}</Text>
+                    <Text style={styles.p}>Alligator Games LLC is a Chicago based company specializing in party games. Our mission
+                                            is to bring joy to our users through group party games. </Text>
+                    <Text style={styles.p}>"Alligator - The Memory Party Game" is our second game released to the app store! Although it was not the first game released,
+                                            we decided to name the company after it because it was the first game in development and marks the start of our journey!</Text>
+                    <Text style={styles.p}>Come learn more about us at https://alligator.games! More games are on the way! Keep an eye out for our releases!</Text>
+                </ScrollView>
             </View>
             
         )
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
         left: Dimensions.get('window').width * .03,
     },
     headerText: {
-        marginTop: Dimensions.get('window').height * .1,
+        marginTop: Dimensions.get('window').height * .05,
         marginLeft: Dimensions.get('window').width * .12,
         marginRight: Dimensions.get('window').width * .12,
         lineHeight: Dimensions.get('window').height * .08,

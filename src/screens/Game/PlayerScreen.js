@@ -17,6 +17,7 @@ class PlayerScreen extends React.Component {
             score: 0,
             total: 0, 
             text: '',
+            word: '',
             modalVisible: false,
             isActive: false
         }
@@ -26,6 +27,7 @@ class PlayerScreen extends React.Component {
     componentDidMount() {
         this.setState({
             player: this.props.route.params.player,
+            word: this.props.route.params.word,
             isActive: true
         }, () => {
             this.getScoreAndTotal()
@@ -92,8 +94,8 @@ class PlayerScreen extends React.Component {
                     <TouchableOpacity onPress={this.goBack} >
                         <Feather name="arrow-left" style={styles.back} />
                     </TouchableOpacity>  
-                    <Text style={styles.headerText}>{this.state.player.first} {this.state.player.last}</Text>
-                    <Text style={styles.usernameText}>({this.state.player.username})</Text>
+                    <Text style={styles.headerText}>{this.state.player.name}</Text>
+                    <Text style={styles.usernameText}>"{this.state.word}"</Text>
                     <FlatList
                         data={this.state.player.answers}
                         renderItem={({ item, index }) => (

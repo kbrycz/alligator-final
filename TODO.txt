@@ -1,11 +1,8 @@
 ***************TODO******************
-- Add header image to the app store stuff
-
+- Update the google ads stuff when they are ready
 **************LATER*****************
+- Fix the screen shot on opening to show the word and not username
 
-
-
-- Change the notification timer back to what its supposed to be
 
 
 **************BUGS***************

@@ -39,12 +39,12 @@ const FinalResultsPlayerComponent = ({player, index, toPlayerScreen}) => {
                 player.answers.length > 0
                 ?   (<TouchableOpacity onPress={() => toPlayerScreen(player)}>
                         <View style={[styles.container, containerStyle()]}>
-                            <Text style={styles.name}>{player.first} {player.last}</Text>
+                            <Text style={styles.name}>{player.name}</Text>
                             <Text style={styles.score}>{getScoreString()}</Text>
                         </View>
                     </TouchableOpacity>)
                 :   (<View style={[styles.container, containerStyle()]}>
-                        <Text style={styles.name}>{player.first} {player.last}</Text>
+                        <Text style={styles.name}>{player.name}</Text>
                         <MaterialCommunityIcons name="sleep" style={styles.sleepIcon} />
                     </View>)
             }

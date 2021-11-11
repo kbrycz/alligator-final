@@ -53,14 +53,8 @@ class HomeScreen extends React.Component {
 
     // Gets all of the user data and sets it to the global variables to be used later
     getAllAsyncs = async () => {
-        AsyncStorage.getItem('first').then((first) => {
-            global.first = first
-        })
-        AsyncStorage.getItem('last').then((last) => {
-            global.last = last
-        })
-        AsyncStorage.getItem('username').then((username) => {
-            global.username = username
+        AsyncStorage.getItem('name').then((name) => {
+            global.name = name
         })
         AsyncStorage.getItem('id').then((id) => {
             global.id = id
@@ -174,9 +168,7 @@ class HomeScreen extends React.Component {
                 let player = {
                     id: global.id,
                     socketId: global.socket.id,
-                    first: global.first,
-                    last: global.last,
-                    username: global.username,
+                    name: global.name,
                     isHost: true, 
                     answers: []
                 }

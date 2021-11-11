@@ -19,10 +19,8 @@ class SettingsScreen extends React.Component {
     // navigating the user back to the login screen
     signout = async () => {
         this.setState({loading: true}, async () => {
-            await AsyncStorage.removeItem('token')
-            await AsyncStorage.removeItem('first')
-            await AsyncStorage.removeItem('last')
-            await AsyncStorage.removeItem('username')
+            await AsyncStorage.removeItem('name')
+            await AsyncStorage.removeItem('id')
             this.setState({
                 loading: false
             })
@@ -38,10 +36,7 @@ class SettingsScreen extends React.Component {
                 <LoadingIndicator loading={this.state.loading} color={Color.MAIN_GREEN} />
                 <Text style={styles.headerText}>Settings</Text>
                 <TouchableOpacity style={styles.changeInfo} onPress={() => {this.props.navigation.navigate('AccountInfo')}}>
-                    <Text style={styles.changeText}>Change Account Information</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.changeInfoPassword} onPress={() => {this.props.navigation.navigate('Password')}}>
-                    <Text style={styles.changeText}>Change Password</Text>
+                    <Text style={styles.changeText}>Change Your Name</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.changeInfoPassword} onPress={() => {this.props.navigation.navigate('About')}}>
                     <Text style={styles.changeText}>About</Text>

@@ -1,8 +1,6 @@
 global.socket = null
-global.first = null
-global.last = null
+global.name = null
 global.id = null
-global.username = null
-global.version = "1.1.1"
+global.version = "1.1.2"
 
 export default global

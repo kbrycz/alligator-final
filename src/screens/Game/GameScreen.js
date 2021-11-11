@@ -226,7 +226,7 @@ class GameScreen extends React.Component {
     // Sends user to the individual player screen
     toPlayerScreen = (player) => {
         this.setState({isActive: false})
-        this.props.navigation.navigate('Player', {player})
+        this.props.navigation.navigate('Player', {player, word: this.state.word})
     }
 
     // Sets the exit modal variable for leaving the game
@@ -259,17 +259,17 @@ class GameScreen extends React.Component {
     }
 
     // Displays the full screen ad
-    // displayAd = async () => {
-    //     // Display an interstitial (Change to ca-app-pub-1470582515457694/1731364666 for prod)
-    //     await AdMobInterstitial.setAdUnitID('ca-app-pub-3940256099942544/4411468910'); // Test ID, Replace with your-admob-unit-id
-    //     await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
-    //     await AdMobInterstitial.showAdAsync();
-    // }
+    displayAd = async () => {
+        // Display an interstitial (Change to ca-app-pub-1470582515457694/1731364666 for prod)
+        // await AdMobInterstitial.setAdUnitID('ca-app-pub-3940256099942544/1033173712'); // Test ID, Replace with your-admob-unit-id
+        // await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
+        // await AdMobInterstitial.showAdAsync();
+        console.log("Ad will show here")
+    }
         
     // Triggered if the user hits the back button
     back = async () => {
         console.log("Navigating back to home screen")
-        // await this.displayAd()
         this.setState({loading: true, leavingGame: true}, () => {
             if (global.socket) {
                 global.socket.disconnect()
@@ -391,7 +391,7 @@ class GameScreen extends React.Component {
             this.setState({loading: true})
             // Send post request to server giving it the answers for player with id global.id and in the current room (code)
             const response = await api.post('/submitAnswers', {answers: this.state.answers, code: this.state.code, id: global.id})
-            // await this.displayAd()
+            await this.displayAd()
             if (!response) {
                 this.setState({loading: false, modalVisible: true, popUpText: 'Unable to connect to the server. Please try again!'})
                 return
@@ -412,7 +412,7 @@ class GameScreen extends React.Component {
     }
 
     // Submits the guess and sends user to appropriate screen
-    submitGuess = () => {
+    submitGuess = async () => {
         let answer = {}
         this.setState({loading: true})
         if (this.state.guess.toLowerCase() === this.state.word.toLowerCase()) {
@@ -435,6 +435,11 @@ class GameScreen extends React.Component {
         let temp = this.state.answers
         temp.push(answer)
         this.setState({answers: temp})
+
+        // Display ad after round 2
+        if (this.state.round === 2) {
+            await this.displayAd()
+        }
 
         if (this.state.status < 4) {
             let text = "Your guess has been submitted! Come back when you get a notification!"
