@@ -2,7 +2,7 @@
   "expo": {
     "name": "Alligator",
     "slug": "alligator",
-    "version": "1.1.2",
+    "version": "1.1.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -19,7 +19,7 @@
     "ios": {
       "supportsTablet": true,
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-1470582515457694~9134184299"
+        "googleMobileAdsAppId": "ca-app-pub-1470582515457694~1864340961"
       },
       "bundleIdentifier": "com.alligatorgames.alligator"
     },

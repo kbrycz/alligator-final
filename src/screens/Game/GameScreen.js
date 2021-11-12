@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import LoadingIndicator from '../../components/general/LoadingIndicator'
 import SimpleModalComponent from '../../components/modal/SimpleModalComponent'
 // import * as TaskManager from 'expo-task-manager';
-// import { AdMobInterstitial } from 'expo-ads-admob';
+import { AdMobInterstitial } from 'expo-ads-admob';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -260,10 +260,10 @@ class GameScreen extends React.Component {
 
     // Displays the full screen ad
     displayAd = async () => {
-        // Display an interstitial (Change to ca-app-pub-1470582515457694/1731364666 for prod)
-        // await AdMobInterstitial.setAdUnitID('ca-app-pub-3940256099942544/1033173712'); // Test ID, Replace with your-admob-unit-id
-        // await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
-        // await AdMobInterstitial.showAdAsync();
+        // Display an interstitial (Change to ca-app-pub-3940256099942544/1033173712 for test)
+        await AdMobInterstitial.setAdUnitID('ca-app-pub-1470582515457694/3435075959'); // Test ID, Replace with your-admob-unit-id
+        await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
+        await AdMobInterstitial.showAdAsync();
         console.log("Ad will show here")
     }
         
