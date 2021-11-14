@@ -1,5 +1,6 @@
 ***************TODO******************
-- Update the google ads stuff when they are ready
+- Have it so that the screen switches to a guess if the user is in between the two time zones
+- Figure out why notification is not sending on all devices
 **************LATER*****************
 - Fix the screen shot on opening to show the word and not username
 
@@ -14,8 +15,7 @@
 
 
 **************v2***************
-- full screen ads after the final guess
-    - Make sure to update it to actual ads
+
 Add share button links and rate
 
 

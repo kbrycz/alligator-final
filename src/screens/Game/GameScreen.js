@@ -119,7 +119,7 @@ class GameScreen extends React.Component {
                 this.setState({
                     code: gameData.code,
                     word: gameData.word,
-                    counter: gameData.counter,
+                    counter: 15,
                     guess: gameData.guess,
                     status: gameData.status === 0 ? 1 : gameData.status,
                     players: gameData.players,
@@ -261,10 +261,16 @@ class GameScreen extends React.Component {
     // Displays the full screen ad
     displayAd = async () => {
         // Display an interstitial (Change to ca-app-pub-3940256099942544/1033173712 for test)
-        await AdMobInterstitial.setAdUnitID('ca-app-pub-1470582515457694/3435075959'); // Test ID, Replace with your-admob-unit-id
-        await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
-        await AdMobInterstitial.showAdAsync();
-        console.log("Ad will show here")
+        // For prod: ca-app-pub-1470582515457694/3435075959
+        try {
+            await AdMobInterstitial.setAdUnitID('ca-app-pub-1470582515457694/3435075959'); // Test ID, Replace with your-admob-unit-id
+            await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
+            await AdMobInterstitial.showAdAsync();
+            console.log("Ad will show here")
+        }
+        catch (err) {
+            console.log("Error showing ads")
+        }
     }
         
     // Triggered if the user hits the back button
@@ -366,7 +372,7 @@ class GameScreen extends React.Component {
 
     // Starts the timer for word screen
     counter = () => {
-        this.setState({timerOn: true}, () => {
+        this.setState({timerOn: true, counter: 15}, () => {
             let timer = setInterval(() => {
                 if (this.state.timerOn) {
                     this.setState({
@@ -391,7 +397,7 @@ class GameScreen extends React.Component {
             this.setState({loading: true})
             // Send post request to server giving it the answers for player with id global.id and in the current room (code)
             const response = await api.post('/submitAnswers', {answers: this.state.answers, code: this.state.code, id: global.id})
-            await this.displayAd()
+            
             if (!response) {
                 this.setState({loading: false, modalVisible: true, popUpText: 'Unable to connect to the server. Please try again!'})
                 return
@@ -401,7 +407,10 @@ class GameScreen extends React.Component {
                 guess: '',
                 status: 5,
                 loading: false
-            }, () => { this.updateAsyncStorage() })
+            }, () => { 
+                this.updateAsyncStorage() 
+                this.displayAd()
+            })
             
         }
         catch (err) {
@@ -415,6 +424,10 @@ class GameScreen extends React.Component {
     submitGuess = async () => {
         let answer = {}
         this.setState({loading: true})
+        // Display ad after round 2
+        if (this.state.round === 2) {
+            this.displayAd()
+        }
         if (this.state.guess.toLowerCase() === this.state.word.toLowerCase()) {
             console.log("Guess was correct")
             answer = {
@@ -435,11 +448,6 @@ class GameScreen extends React.Component {
         let temp = this.state.answers
         temp.push(answer)
         this.setState({answers: temp})
-
-        // Display ad after round 2
-        if (this.state.round === 2) {
-            await this.displayAd()
-        }
 
         if (this.state.status < 4) {
             let text = "Your guess has been submitted! Come back when you get a notification!"

@@ -134,6 +134,14 @@ class LobbyScreen extends React.Component {
             this.setState({loading: false, startGame: true, isActive: false})
             this.props.navigation.navigate('Game', obj)
         })
+
+        // Updates all users with a new players ready up sign
+        global.socket.on('updateReadyUp', (playersInLobby_in) => {
+            console.log("Updating players array for a ready up")
+            this.setState({
+                players: playersInLobby_in,
+            })
+        })
     }
 
     
@@ -286,6 +294,26 @@ class LobbyScreen extends React.Component {
         }
     }
 
+    // Sends server signal that player has readied up. Creates whole new playersInLobby array
+    readyUp = (id) => {
+        let tempArray = []
+        for (let i = 0; i < this.state.players.length; ++i) {
+            let p = this.state.players[i]
+            if (this.state.players[i].id === id) {
+                p.isReady = true
+            }
+            tempArray.push(p)
+        }
+
+        this.setState({
+            players: tempArray
+        }, () => {
+            const obj = {code: this.state.code, players: tempArray}
+            global.socket.emit("updateReadyUp", obj)
+        })
+
+    }
+
     // Lets users share the app with other people
     shareButton = async () => {
         try {
@@ -330,7 +358,7 @@ class LobbyScreen extends React.Component {
                         <FlatList
                             data={this.state.players}
                             renderItem={({ item, index }) => (
-                                <PlayerListComponent player={item} index={index} />
+                                <PlayerListComponent player={item} index={index} readyUp={this.readyUp}/>
                             )}
                             keyExtractor={item => item.id.toString()}
                             style={styles.list} />

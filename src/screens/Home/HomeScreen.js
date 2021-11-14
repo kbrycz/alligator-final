@@ -169,6 +169,7 @@ class HomeScreen extends React.Component {
                     id: global.id,
                     socketId: global.socket.id,
                     name: global.name,
+                    isReady: false,
                     isHost: true, 
                     answers: []
                 }

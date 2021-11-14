@@ -91,6 +91,7 @@ class JoinScreen extends React.Component {
             socketId: global.socket.id,
             name: global.name,
             isHost: false,
+            isReady: false,
             answers: []
         }
         let obj = {
