@@ -27,7 +27,8 @@ class LobbyScreen extends React.Component {
             isGoingHome: false,
             loading: false,
             startGame: false,
-            isActive: false
+            isActive: false,
+            notifStatus: 0
         }
     }
 
@@ -125,7 +126,7 @@ class LobbyScreen extends React.Component {
         global.socket.on('hostStartedGame', async (word) => {
             console.log("Host has started game")
             // Get the game object async working
-            let tempNotificationTimes = this.getNotificationTimes()
+            let tempNotificationTimes = this.getNotificationTimes2()
 
             let obj = {
                 screen: 'Gameplay',
@@ -389,7 +390,8 @@ class LobbyScreen extends React.Component {
                     <QuitModalComponent modalExitVisible={this.state.modalExitVisible} setModalExitVisible={this.setModalExitVisible}
                         text={this.state.quitText} func={this.back}/>
                     <SimpleModalComponent modalVisible={this.state.modalVisible} setModalVisible={this.closeModal} text={this.state.text} buttonText={"OK"} />
-                    <NotificationComponent handleNotificationResponse={this.handleNotificationResponse} backFunction={() => console.log("Do nothing")} pageId={2} />
+                    <NotificationComponent handleNotificationResponse={this.handleNotificationResponse} backFunction={() => console.log("Do nothing")} pageId={2} 
+                                            notifStatus={this.state.notifStatus} />
                 </SafeAreaView>
             </View>
         )

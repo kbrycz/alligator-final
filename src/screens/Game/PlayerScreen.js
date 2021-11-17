@@ -19,7 +19,8 @@ class PlayerScreen extends React.Component {
             text: '',
             word: '',
             modalVisible: false,
-            isActive: false
+            isActive: false,
+            notifStatus: 0
         }
     }
 
@@ -28,7 +29,7 @@ class PlayerScreen extends React.Component {
         this.setState({
             player: this.props.route.params.player,
             word: this.props.route.params.word,
-            isActive: true
+            isActive: true,
         }, () => {
             this.getScoreAndTotal()
         })
@@ -107,7 +108,8 @@ class PlayerScreen extends React.Component {
                     <Text style={styles.scoreText}>{this.state.score} / {this.state.total}</Text>
                     {this.blackoutText()}
                     <SimpleModalComponent modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} text={this.state.text} buttonText="OK" />
-                    <NotificationComponent handleNotificationResponse={this.handleNotificationResponse} backFunction={() => console.log("Do nothing")} pageId={3} />
+                    <NotificationComponent handleNotificationResponse={this.handleNotificationResponse} backFunction={() => console.log("Do nothing")} pageId={3} 
+                                            notifStatus={this.state.notifStatus} />
                 </SafeAreaView>
             </View>
         )

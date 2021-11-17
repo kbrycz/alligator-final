@@ -1,9 +1,11 @@
 ***************TODO******************
 - Figure out why notification is not sending on all devices after a bit
-
+- Figure out why we cannot connect to server at thend
+- Fix all screenshots to new version and on opening screen
+- Submit to app store
 
 **************LATER*****************
-- Fix the screen shot on opening to show the word and not username
+
 
 
 
@@ -16,9 +18,3 @@
 
 
 **************v2***************
-
-Add share button links and rate
-
-
-- Need to figure out notifications with handleSuccess for in the foreground
-- When all done, need to add task manager for background notification with info.plist

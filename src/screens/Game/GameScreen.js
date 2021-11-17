@@ -70,7 +70,8 @@ class GameScreen extends React.Component {
             timerDone: false,
             leavingGame: false,
             isActive: false,
-            guessTime: 0
+            guessTime: 0,
+            notifStatus: 0
         }
         this.focusListener = null
     }
@@ -165,7 +166,7 @@ class GameScreen extends React.Component {
     componentDidMount() {
         this.focusListener = this.props.navigation.addListener('focus', () => {
            console.log("Game Page being focused")
-           this.setState({isActive: true})
+           this.setState({isActive: true, notifStatus: this.state.notifStatus + 1})
            this.start()
         });
 
@@ -311,9 +312,9 @@ class GameScreen extends React.Component {
         // Display an interstitial (Change to ca-app-pub-3940256099942544/1033173712 for test)
         // For prod: ca-app-pub-1470582515457694/3435075959
         try {
-            await AdMobInterstitial.setAdUnitID('ca-app-pub-1470582515457694/3435075959'); // Test ID, Replace with your-admob-unit-id
-            await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
-            await AdMobInterstitial.showAdAsync();
+            // await AdMobInterstitial.setAdUnitID('ca-app-pub-1470582515457694/3435075959'); // Test ID, Replace with your-admob-unit-id
+            // await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
+            // await AdMobInterstitial.showAdAsync();
             console.log("Ad will show here")
         }
         catch (err) {
@@ -417,7 +418,27 @@ class GameScreen extends React.Component {
             
             this.setState({loading: true})
             // Send post request to server giving it the answers for player with id global.id and in the current room (code)
-            const response = await api.post('/submitAnswers', {answers: this.state.answers, code: this.state.code, id: global.id})
+
+            let id = global.id
+            let code = this.state.code
+            let answers = this.state.answers
+
+            if (!id) {
+                id = await AsyncStorage.getItem('id')
+            }
+
+            let gameDataTemp = await AsyncStorage.getItem('gameData')
+            let gameData = JSON.parse(gameDataTemp)
+
+            if (!code) {
+                code = gameData.code
+            }
+
+            if (answers) {
+                answers = gameData.answers
+            }
+
+            const response = await api.post('/submitAnswers', {answers: answers, code: code, id: id})
             
             if (!response) {
                 this.setState({loading: false, modalVisible: true, popUpText: 'Unable to connect to the server. Please try again!'})
@@ -479,6 +500,7 @@ class GameScreen extends React.Component {
             this.setState({status: 3, guess: '', round: this.state.round + 1, waitText: text, hasGuessed: this.state.hasGuessed + 1, loading: false}, () => { this.updateAsyncStorage() })
         }
         else {
+            await this.updateAsyncStorage()
             this.submitAllAnswers()
         }
     }
@@ -512,7 +534,7 @@ class GameScreen extends React.Component {
                 <LoadingIndicator loading={this.state.loading} color={"#fff"} />    
                 <CircleHomeComponent />
                 <SafeAreaView style={styles.safeView}>
-                    <NotificationComponent handleNotificationResponse={this.handleNotificationResponse} backFunction={this.back} pageId={-1} />
+                    <NotificationComponent handleNotificationResponse={this.handleNotificationResponse} backFunction={this.back} pageId={-1} notifStatus={this.state.notifStatus} />
                     <SimpleModalComponent modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} text={this.state.popUpText} buttonText={'OK'} />
                     {this.renderElements()}
                 </SafeAreaView>

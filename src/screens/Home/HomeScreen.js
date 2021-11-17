@@ -24,7 +24,8 @@ class HomeScreen extends React.Component {
             notificationsOn: '',
             loading: false,
             connected: false,
-            isActive: false
+            isActive: false,
+            notifStatus: 0
         }
     }
 
@@ -260,7 +261,8 @@ class HomeScreen extends React.Component {
                 </TouchableOpacity> */}
             </View>
             <SimpleModalComponent modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} text={this.state.text} buttonText={'OK'} />
-            <NotificationComponent handleNotificationResponse={this.handleNotificationResponse} backFunction={() => console.log("Do nothing")} pageId={0} />
+            <NotificationComponent handleNotificationResponse={this.handleNotificationResponse} backFunction={() => console.log("Do nothing")} pageId={0}
+                                    notifStatus={this.state.notifStatus} />
         </SafeAreaView>
         )
     }

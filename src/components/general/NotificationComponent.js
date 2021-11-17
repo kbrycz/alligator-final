@@ -14,13 +14,15 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const NotificationComponent = ({handleNotificationResponse, backFunction, pageId}) => {
+const NotificationComponent = ({handleNotificationResponse, backFunction, pageId, notifStatus}) => {
     const [notification, setNotification] = useState(false);
     const [modalExitVisible, setModalExitVisible] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
 
     useEffect(() => {
+
+      console.log("Running the notif useEffect")
 
       // Not quite sure what it does, leave for now
       notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -34,12 +36,12 @@ const NotificationComponent = ({handleNotificationResponse, backFunction, pageId
 
       // Cancel all notifications when component is closed
       return async () => {
-        await Notifications.cancelAllScheduledNotificationsAsync();
+        console.log("Closing the notif useEffect")
         Notifications.removeNotificationSubscription(notificationListener.current);
         Notifications.removeNotificationSubscription(responseListener.current);
       };
     
-  }, []);
+  }, [notifStatus]);
 
   // Cancel all notifications and remove listeners
   const getRidOfNotifications = async () => {

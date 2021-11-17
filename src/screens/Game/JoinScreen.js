@@ -21,7 +21,8 @@ class JoinScreen extends React.Component {
             text: '',
             localPlayer: {},
             loading: false,
-            isActive: false
+            isActive: false,
+            notifStatus: 0
         }
     }
 
@@ -76,6 +77,11 @@ class JoinScreen extends React.Component {
     // Updates the code variable
     setCode = (code_in) => {
         this.setState({code: code_in})
+    }
+
+    // Sets the notif status
+    setNotifStatus = (n) => {
+        this.setState({notifStatus: n})
     }
 
     // Updates the modalVisible variable
@@ -141,7 +147,8 @@ class JoinScreen extends React.Component {
                         </TouchableOpacity> 
                     </View>
                     <SimpleModalComponent modalVisible={this.state.modalVisible} setModalVisible={this.setModalVisible} text={this.state.text} buttonText="OK" />
-                    <NotificationComponent handleNotificationResponse={this.handleNotificationResponse} backFunction={() => console.log("Do nothing")} pageId={1} />
+                    <NotificationComponent handleNotificationResponse={this.handleNotificationResponse} backFunction={() => console.log("Do nothing")} pageId={1} 
+                                            notifStatus={this.state.notifStatus}/>
                 </SafeAreaView>
             </View>
             
