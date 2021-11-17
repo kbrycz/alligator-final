@@ -70,6 +70,7 @@ class GameScreen extends React.Component {
             timerDone: false,
             leavingGame: false,
             isActive: false,
+            guessTime: 0
         }
         this.focusListener = null
     }
@@ -163,10 +164,11 @@ class GameScreen extends React.Component {
     // Triggers when page is focused in order to disable notification problems
     componentDidMount() {
         this.focusListener = this.props.navigation.addListener('focus', () => {
-           console.log("page being focused")
+           console.log("Game Page being focused")
            this.setState({isActive: true})
            this.start()
         });
+
     }
 
     // Removes the focus listener to avoid memory leak
@@ -179,48 +181,94 @@ class GameScreen extends React.Component {
         })
     }
 
+    // Check if current time is after given date (returns true if past this date)
+    checkIfAfter = (date, hour, min) => {
+        let currentHour = new Date().getHours()
+        let currentMinute = new Date().getMinutes()
+        let currentDate = new Date().getDate()
 
-    // Updates the round info and sends user to correct screen on notification click
-    updateRoundInfo = (data) => {
+        if (currentDate === date) {
+            if (currentHour > hour) {
+                return true
+            }
+            else if(currentHour === hour) {
+                if (currentMinute >= min) {
+                    return true
+                }
+                else {
+                    return false
+                }
+            }
+            else {
+                return false
+            }
+        }
+        else if (currentDate < date) {
+            return false
+        }
+        else {
+            return true
+        }
+    }
 
-        // Sends user a pop up that they used the wrong game code
-        if (data.code !== this.state.code) {
-            console.log("in here")
-            console.log(data.code)
-            console.log(this.state.code)
-            this.setState({
-                popUpText: 'This notification was not sent for the current game. Please use the correct one!',
-                modalVisible: true
-            })   
-            console.log("User used an old notification")
-            return
+    // Gets the user on the right page due to notification times
+    getUserOnRightPage = (isRefresh) => {
+        // TODO
+        console.log("user needs to be updated")
+
+        let notifIndex = -1
+
+        // Gets the correct notification round
+        for (let i = 0; i < this.state.notificationTimes.length; ++i) {
+            let date = this.state.notificationTimes[i].date
+            let hour = this.state.notificationTimes[i].hour
+            let min = this.state.notificationTimes[i].minute
+
+            if (this.checkIfAfter(date, hour, min)) {
+                notifIndex = i
+                continue
+            }
         }
 
-        const isNotTooLate = this.checkIfLate(data)
 
-        // Sends user to page telling them they're too late for this round
-        if (!isNotTooLate) {
-            console.log("too late to guess")
-            this.setState({status: 6}, () => this.updateAsyncStorage())
-            return
+        if (notifIndex < 0) {
+            console.log("User is not ready to guess yet")
+            return false
+        }
+        else {
+
+            // Check and make sure user is not two days late
+            let currentDate = new Date().getDate()
+            if (currentDate >= this.state.notificationTimes[notifIndex].date + 2) {
+                this.setState({
+                    popUpText: "Game has been closed. Return to main menu!",
+                    modalVisible: true
+                })
+                return false
+            }
+
+            let round = this.state.notificationTimes[notifIndex].wordRound
+            
+            // Check if user has already guessed on the round
+            if (round === this.state.guessTime) {
+                console.log("User has already guessed this round!")
+                return false
+            }
+            else {
+                setTimeout(async () => {
+                    console.log("User has not guessed this round yet!")
+                    this.setState({
+                        status: round >= 4 ? 4 : 2,
+                        round: round,
+                    }, () => {
+                        this.updateAsyncStorage()
+                    })
+                  }, isRefresh ? 1000 : 0);
+                  return true
+                
+            }
         }
 
-        // Sends user to correct screen while updating async storage
-        if (data.wordRound === 4) {
-            this.setState({
-                status: 4,
-                round: data.wordRound
-            }, () => {
-                this.updateAsyncStorage()
-            })
-        } else {
-            this.setState({
-                status: 2,
-                round: data.wordRound
-            }, () => {
-                this.updateAsyncStorage()
-            })
-        }
     }
 
     // Sends user to the individual player screen
@@ -299,34 +347,6 @@ class GameScreen extends React.Component {
         this.setState({ notification: notification }, () => { this.updateAsyncStorage() });
     };
 
-    // Checks whether the user clicked on a notification that has expired, true if can guess
-    checkIfLate = (data) => {
-        let {hour, minute, wordRound} = data
-        console.log("hour: ", hour)
-        console.log("min: ", minute)
-        console.log(wordRound)
-        if (wordRound === 4) {
-            return true
-        }
-        let currentHour = new Date().getHours()
-        let currentMinute = new Date().getMinutes()
-        console.log("Chour: ", currentHour)
-        console.log("Cmin: ", currentMinute)
-        if (currentHour === hour + 1) {
-            if (currentMinute < minute) {
-                return true
-            }
-            return false
-        } 
-        else if (currentHour < hour + 1) {
-            return true
-        }
-        else {
-            return false
-        }
-
-    }
-
     // handle the notification response when user clicks on the notification
     handleNotificationResponse = async (response, pageId) => {
         if (this.state.status === 5 && pageId === -1 && this.state.isActive) {
@@ -339,7 +359,7 @@ class GameScreen extends React.Component {
         if (pageId === -1 && this.state.status !== 5 && this.state.isActive) {
             console.log("in game notif")
             const {data} = response.notification.request.content
-            this.updateRoundInfo(data)
+            this.getUserOnRightPage(false)
         }
     }
 
@@ -349,12 +369,13 @@ class GameScreen extends React.Component {
         for (let i = 0; i < this.state.notificationTimes.length; ++i) {
             await Notifications.scheduleNotificationAsync({
                 content: {
-                    title: "Alligator - Party Game",
-                    body: "Round " + this.state.notificationTimes[i].wordRound + ": It's time to guess the word!",
+                    title: "Alligator - Memory Party Game",
+                    body: "It's time to guess the word!",
                     data: {
                         wordRound: this.state.notificationTimes[i].wordRound,
                         hour: this.state.notificationTimes[i].hour,
                         minute: this.state.notificationTimes[i].minute,
+                        date: this.state.notificationTimes[i].date,
                         code: this.state.code
                     },
                     payload: {
@@ -447,7 +468,7 @@ class GameScreen extends React.Component {
         // Add answer to answers array
         let temp = this.state.answers
         temp.push(answer)
-        this.setState({answers: temp})
+        this.setState({answers: temp, guessTime: this.state.round})
 
         if (this.state.status < 4) {
             let text = "Your guess has been submitted! Come back when you get a notification!"
@@ -468,19 +489,19 @@ class GameScreen extends React.Component {
             case 0:
                 return <WordComponent word={this.state.word} counter={this.state.counter}/>
             case 1: 
-                return <WaitingComponent waitText={"Come back when you get a notification to guess! Good luck!"} />
+                return <WaitingComponent waitText={"Come back when you get a notification to guess! Good luck!"} getUserOnRightPage={this.getUserOnRightPage} />
             case 2:
-                return <GuessingComponent guess={this.state.guess} setGuess={this.setGuess} submitGuess={this.submitGuess} title={"Guess the Word!"} />
+                return <GuessingComponent guess={this.state.guess} setGuess={this.setGuess} submitGuess={this.submitGuess} title={"Guess the Word!"} round={this.state.round} />
             case 3: 
-                return <WaitingComponent waitText={this.state.waitText} />
+                return <WaitingComponent waitText={this.state.waitText} getUserOnRightPage={this.getUserOnRightPage} />
             case 4:
-                return <GuessingComponent guess={this.state.guess} setGuess={this.setGuess} submitGuess={this.submitGuess} title={"Good Morning! Guess the Word!"} />
+                return <GuessingComponent guess={this.state.guess} setGuess={this.setGuess} submitGuess={this.submitGuess} title={"Good Morning! Guess the Word!"} round={this.state.round} />
             case 5:
                 return <PlayerLobbyComponent players={this.state.players} toPlayerScreen={this.toPlayerScreen} 
                                              word={this.state.word} code={this.state.code} setPlayers={this.setPlayers} 
                                              setModalVisible={this.setModalVisible} setPopUpText={this.setPopUpText} />
             case 6: 
-                return <WaitingComponent waitText={"You are too late for this round! Make sure to click the most recent notification or wait for next round!"} />
+                return <WaitingComponent waitText={"You are too late for this round! Make sure to click the most recent notification or wait for next round!"} getUserOnRightPage={this.getUserOnRightPage} />
         }
     }
 

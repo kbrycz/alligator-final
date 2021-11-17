@@ -1,6 +1,7 @@
 ***************TODO******************
-- Have it so that the screen switches to a guess if the user is in between the two time zones
-- Figure out why notification is not sending on all devices
+- Figure out why notification is not sending on all devices after a bit
+
+
 **************LATER*****************
 - Fix the screen shot on opening to show the word and not username
 

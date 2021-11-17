@@ -150,24 +150,29 @@ class LobbyScreen extends React.Component {
         let notifs = []
         let currentHour = new Date().getHours()
         let currentMinute = new Date().getMinutes()
+        let currentDate = new Date().getDate()
         // Get the first notif
 
         notifs.push({
+            date: currentDate,
             hour: currentHour,
             minute: currentMinute + 1,
             wordRound: 1
         })
         notifs.push({
+            date: currentDate,
             hour: currentHour,
             minute: currentMinute + 2,
             wordRound: 2
         })
         notifs.push({
+            date: currentDate,
             hour: currentHour,
             minute: currentMinute + 3,
             wordRound: 3
         })
         notifs.push({
+            date: currentDate,
             hour: currentHour,
             minute: currentMinute + 4,
             wordRound: 4
@@ -180,9 +185,11 @@ class LobbyScreen extends React.Component {
         let notifs = []
         let currentHour = new Date().getHours()
         let currentMinute = new Date().getMinutes()
+        let currentDate = new Date().getDate()
         // Get the first notif
         if (currentHour + 1 < 25) {
             notifs.push({
+                date: currentDate,
                 hour: currentHour + 1,
                 minute: currentMinute,
                 wordRound: 1
@@ -197,6 +204,7 @@ class LobbyScreen extends React.Component {
         // Get the second notif
         if (currentHour + 2 < 25) {
             notifs.push({
+                date: currentDate,
                 hour: currentHour + 2,
                 minute: currentMinute,
                 wordRound: 2
@@ -211,6 +219,7 @@ class LobbyScreen extends React.Component {
         // Get the 3rd notif
         if (currentHour + 3 < 25) {
             notifs.push({
+                date: currentDate,
                 hour: currentHour + 3,
                 minute: currentMinute,
                 wordRound: 3
@@ -225,12 +234,14 @@ class LobbyScreen extends React.Component {
         // Get the morning notif
         if (currentHour > 3 && currentHour < 8) {
             notifs.push({
+                date: currentDate,
                 hour: currentHour + 4,
                 minute: currentMinute,
                 wordRound: 4
             })
         } else {
             notifs.push({
+                date: (currentHour >= 0 && currentHour <= 3) ? currentDate : currentDate + 1,
                 hour: 7,
                 minute: 30,
                 wordRound: 4

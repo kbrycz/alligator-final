@@ -4,7 +4,7 @@ import * as Color from '../../../global/colors'
 import HideKeyboard from '../general/HideKeyboard'
 import SimpleModalComponent from '../modal/SimpleModalComponent'
 
-const GuessingComponent = ({guess, setGuess, submitGuess, title}) => {
+const GuessingComponent = ({guess, setGuess, submitGuess, title, round}) => {
 
     const [modalVisible, setModalVisible] = React.useState(false)
     const [text, setText] = React.useState("Guess is not long enough!")
@@ -21,6 +21,7 @@ const GuessingComponent = ({guess, setGuess, submitGuess, title}) => {
     return (
         <View>
             <Text style={styles.headerText}>{title}</Text>
+            <Text style={styles.sub}>(Round {round})</Text>
             <HideKeyboard>
                 <KeyboardAvoidingView behavior='position'>
                     <TextInput
@@ -55,6 +56,16 @@ const styles = StyleSheet.create({
         fontSize: Dimensions.get('window').height * .06,
         fontFamily: 'PatrickHand',
         color: '#fff'
+    },
+    sub: {
+        marginTop: Dimensions.get('window').height * .01,
+        marginLeft: Dimensions.get('window').width * .12,
+        marginRight: Dimensions.get('window').width * .12,
+        lineHeight: Dimensions.get('window').height * .08,
+        textAlign: 'center',
+        fontSize: Dimensions.get('window').height * .03,
+        fontFamily: 'PatrickHand',
+        color: 'rgba(255,255,255,0.6)'
     },
     textInput: {
         marginTop: Dimensions.get('window').height * .1, 

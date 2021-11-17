@@ -97,6 +97,7 @@ class PlayerScreen extends React.Component {
                     <Text style={styles.headerText}>{this.state.player.name}</Text>
                     <Text style={styles.usernameText}>"{this.state.word}"</Text>
                     <FlatList
+                        scrollEnabled={false}
                         data={this.state.player.answers}
                         renderItem={({ item, index }) => (
                             <AnswersListComponent guess={item} index={index} />
@@ -163,9 +164,6 @@ const styles = StyleSheet.create({
     },
     list: {
         marginTop: Dimensions.get('window').height * .05,
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.1)',
         maxHeight: Dimensions.get('window').height * .5,
     },
 })
