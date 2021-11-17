@@ -126,7 +126,7 @@ class LobbyScreen extends React.Component {
         global.socket.on('hostStartedGame', async (word) => {
             console.log("Host has started game")
             // Get the game object async working
-            let tempNotificationTimes = this.getNotificationTimes2()
+            let tempNotificationTimes = this.getNotificationTimes()
 
             let obj = {
                 screen: 'Gameplay',

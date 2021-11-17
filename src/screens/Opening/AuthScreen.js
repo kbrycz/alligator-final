@@ -31,7 +31,7 @@ class AuthScreen extends React.Component {
     // Makes sure that the given string only has letters
     // Used for names
     onlyLetters(str) {
-        const reg = new RegExp("^[A-Za-z]+$")
+        const reg = new RegExp("^[A-Za-z ]+$")
         return reg.test(str)
     }
 
@@ -86,13 +86,14 @@ class AuthScreen extends React.Component {
                         </View>
                         <Text style={styles.header}>Enter your name to play!</Text>
                         <TextInput
+
                                     autoCompleteType="name"
                                     keyboardType="default"
                                     textContentType='givenName'
                                     autoCorrect={true}
                                     style={styles.textInput}
                                     returnKeyType="done"
-                                    maxLength={12}
+                                    maxLength={10}
                                     value={this.state.name}
                                     placeholder='Your name'
                                     onChangeText={this.setName} />

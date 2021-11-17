@@ -37,7 +37,7 @@ class SettingsAccountInfoScreen extends React.Component {
     // Makes sure that the given string only has letters
     // Used for names
     onlyLetters(str) {
-        const reg = new RegExp("^[A-Za-z]+$")
+        const reg = new RegExp("^[A-Za-z ]+$")
         return reg.test(str)
     }
 
@@ -80,6 +80,7 @@ class SettingsAccountInfoScreen extends React.Component {
                             <View>
                                 <View style={styles.container}>
                                     <TextInput
+                                        maxLength={10}
                                         autoCompleteType="name"
                                         keyboardType="default"
                                         textContentType='givenName'

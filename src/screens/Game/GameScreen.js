@@ -312,9 +312,9 @@ class GameScreen extends React.Component {
         // Display an interstitial (Change to ca-app-pub-3940256099942544/1033173712 for test)
         // For prod: ca-app-pub-1470582515457694/3435075959
         try {
-            // await AdMobInterstitial.setAdUnitID('ca-app-pub-1470582515457694/3435075959'); // Test ID, Replace with your-admob-unit-id
-            // await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
-            // await AdMobInterstitial.showAdAsync();
+            await AdMobInterstitial.setAdUnitID('ca-app-pub-1470582515457694/3435075959'); // Test ID, Replace with your-admob-unit-id
+            await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
+            await AdMobInterstitial.showAdAsync();
             console.log("Ad will show here")
         }
         catch (err) {
