@@ -1,8 +1,4 @@
 ***************TODO******************
-- Figure out why notification is not sending on all devices after a bit
-- Figure out why we cannot connect to server at thend
-- Fix all screenshots to new version and on opening screen
-- Submit to app store
 
 **************LATER*****************
 
