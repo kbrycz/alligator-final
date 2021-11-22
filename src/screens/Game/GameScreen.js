@@ -71,7 +71,8 @@ class GameScreen extends React.Component {
             leavingGame: false,
             isActive: false,
             guessTime: 0,
-            notifStatus: 0
+            notifStatus: 0,
+            hasStarted: false
         }
         this.focusListener = null
     }
@@ -84,6 +85,8 @@ class GameScreen extends React.Component {
                 console.log("inside the first one")
                 this.setState({
                     status: 0,
+                    answers: [],
+                    round: 1,
                     leavingGame: false,
                     word: this.props.route.params.word,
                     code: this.props.route.params.code,
@@ -134,6 +137,7 @@ class GameScreen extends React.Component {
                     hasGuessed: gameData.hasGuessed,
                     notificationTimes: gameData.notificationTimes,
                     timerOn: gameData.timerOn,
+                    hasStarted: true,
                     loading: false
                 })
             }
@@ -153,11 +157,14 @@ class GameScreen extends React.Component {
 
     // Starts the game by starting counter and triggers everyones notifications
     start = () => {
-        this.initializeAsyncStorage().then(() => {
+        this.initializeAsyncStorage().then(async () => {
             console.log(this.state.status)
-            if (this.state.status === 0) {
+            if (!this.state.hasStarted) {
+                this.setState({hasStarted: true})
+                await AsyncStorage.setItem("gameStarted", "true")
                 this.counter()
                 this.triggerAllNotifications()
+
             }
         })
     }
@@ -335,10 +342,10 @@ class GameScreen extends React.Component {
             this.setState({
                 loading: false,
             }, async () => {
-                await AsyncStorage.removeItem('gameData').then(() => {
-                    console.log("Quitting the game!")
-                    this.props.navigation.navigate('Home')
-                })
+                console.log("Quitting the game!")
+                await AsyncStorage.removeItem('gameStarted')
+                await AsyncStorage.removeItem('gameData')
+                this.props.navigation.navigate('Home')
             })
         })
     }
@@ -434,7 +441,7 @@ class GameScreen extends React.Component {
                 code = gameData.code
             }
 
-            if (answers) {
+            if (!answers) {
                 answers = gameData.answers
             }
 

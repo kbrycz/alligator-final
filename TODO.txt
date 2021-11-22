@@ -1,5 +1,6 @@
 ***************TODO******************
-
+Fix the problem with the game going back to lobby
+Fix the problem that user submits words from previous games
 **************LATER*****************
 
 

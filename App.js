@@ -131,7 +131,7 @@ class App extends React.Component {
     this.setState({ hasName: name !== null})
 
     // Checks if the users has a login token and sets the hasToken bool
-    let gameData = await AsyncStorage.getItem('gameData')
+    let gameData = await AsyncStorage.getItem('gameStarted')
     this.setState({ hasGameData: gameData !== null})
 
     setTimeout(async () => {
